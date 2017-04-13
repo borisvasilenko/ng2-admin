@@ -1,15 +1,13 @@
 import { Routes, RouterModule }  from '@angular/router';
-import { Pages } from './pages.component';
 import { ModuleWithProviders } from '@angular/core';
+import { AuthResolver } from './login/auth.resolver';
+import { Pages } from './pages.component';
 // noinspection TypeScriptValidateTypes
 
 // export function loadChildren(path) { return System.import(path); };
 
 export const routes: Routes = [
-  {
-    path: 'login',
-    loadChildren: 'app/pages/login/login.module#LoginModule'
-  },
+  { path: '', redirectTo: 'pages', pathMatch: 'full' },
   {
     path: 'register',
     loadChildren: 'app/pages/register/register.module#RegisterModule'
@@ -17,6 +15,7 @@ export const routes: Routes = [
   {
     path: 'pages',
     component: Pages,
+    resolve: { auth: AuthResolver },
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', loadChildren: 'app/pages/dashboard/dashboard.module#DashboardModule' },

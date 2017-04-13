@@ -1,3 +1,4 @@
+import { AuthService } from './pages/login/auth.service';
 import { Component, ViewContainerRef } from '@angular/core';
 
 import { GlobalState } from './global.state';
@@ -18,18 +19,23 @@ import 'style-loader!./theme/initial.scss';
     <main [ngClass]="{'menu-collapsed': isMenuCollapsed}" baThemeRun>
       <div class="additional-bg"></div>
       <router-outlet></router-outlet>
+      <login *ngIf="!authenticated"></login>
     </main>
   `
 })
 export class App {
 
   isMenuCollapsed: boolean = false;
+  authenticated: boolean = false;
 
-  constructor(private _state: GlobalState,
-              private _imageLoader: BaImageLoaderService,
-              private _spinner: BaThemeSpinner,
-              private viewContainerRef: ViewContainerRef,
-              private themeConfig: BaThemeConfig) {
+  constructor(
+    private _authService: AuthService,
+    private _state: GlobalState,
+    private _imageLoader: BaImageLoaderService,
+    private _spinner: BaThemeSpinner,
+    private viewContainerRef: ViewContainerRef,
+    private themeConfig: BaThemeConfig
+  ) {
 
     themeConfig.config();
 
@@ -37,6 +43,10 @@ export class App {
 
     this._state.subscribe('menu.isCollapsed', (isCollapsed) => {
       this.isMenuCollapsed = isCollapsed;
+    });
+
+    this._authService.authenticated.subscribe(authenticated => {
+        this.authenticated = authenticated;
     });
   }
 
